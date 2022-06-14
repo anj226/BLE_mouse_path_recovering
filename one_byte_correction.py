@@ -1,4 +1,3 @@
-from distutils.log import error
 from Crypto.Cipher import AES
 from Crypto.Util.number import bytes_to_long, long_to_bytes
 
@@ -29,7 +28,8 @@ def error_byte_detect(key, slave_r, pres, preq, rat, iat, ia, ra, confirm):
             if c1(key, test_r, pres, preq, rat, iat, ia, ra) == confirm:
                 return test_r
 
-key = b'\x00'*16
+# The sample data we captured from our experiment
+key = b'\x00'*16            #In BLE Legacy - Just works the Temporary Key is set to 0
 preq = 0x0f0d102d000101
 pres = 0x03011001000302
 iat, rat = 0, 1
@@ -51,7 +51,6 @@ if c1(key, slave_r, pres, preq, rat, iat, ia, ra) != hex(slave_confirm):
     print(f"The right slave random shoud be {hex(slave_r)}.")
 
 _r = ((slave_r % (1 << 64)) << 64) + master_r % (1 << 64)
-# print(hex(_r))
 
 STK = e(key, _r)
 print(f"The STK(short term key) is {hex(STK)}.")
